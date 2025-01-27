@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import fetchDeckData from "./DeckOfCardsAPI";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
 
@@ -8,19 +9,9 @@ function App() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    //TODO -----extract the async function into a separate file (keep try catch here), and add logic to convert value from JACK->11 etc, also parseInt numbers!!!
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          "https://deckofcardsapi.com/api/deck/new/draw/?count=52"
-        );
-        if (!response.ok) {
-          throw new Error(`Response status: ${response.status}`);
-        }
-        const deckData = await response.json();
-        const deckArray = deckData.cards.map((data) => {
-          return { value: data.value, image: data.images.svg };
-        });
+        const deckArray = await fetchDeckData();
         setDeck(deckArray);
         console.log(deckArray);
         setError(null);
