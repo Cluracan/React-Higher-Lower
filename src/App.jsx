@@ -15,6 +15,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [imageIndex, setImageIndex] = useState(0);
+  const [imageSrc, SetImageSrc] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,13 +38,9 @@ function App() {
     setImageIndex((imageIndex + 1) % 3);
   }
 
-  const draw = (context) => {
-    const image = new Image();
-    image.src = imageArray[imageIndex];
-
-    image.onload = () => {
-      context.drawImage(image, 0, 0, 90, 130);
-    };
+  const draw = () => {
+    SetImageSrc(imageArray[imageIndex]);
+    setImageIndex((imageIndex + 1) % 3);
   };
 
   return (
@@ -54,12 +51,12 @@ function App() {
 
         {/* Remove this img! */}
         <img
-          onClick={handleShowDeck}
+          onClick={draw}
           src={reactLogo}
           className="logo react"
           alt="React logo"
         />
-        <Canvas draw={draw} />
+        <Canvas imageSrc={imageSrc} />
       </div>
     </>
   );
