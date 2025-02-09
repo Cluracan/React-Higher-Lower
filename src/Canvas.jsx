@@ -18,20 +18,29 @@ export default function Canvas({
 
   useEffect(() => {
     if (!context) return;
-    //initial board setup  - add back of card and turn first card... so maybe put in useEffect below with context dependency?
+    //TODO in App, start button should call draw - this is fine as app keeps check of score, so startButton just doesn't invoke high/low check
 
     context.fillStyle = "green";
     context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-  }, [context]);
+    if (cardBackImage) {
+      context.drawImage(
+        cardBackImage,
+        2 * cardPadding + cardWidth,
+        cardPadding,
+        cardWidth,
+        cardHeight
+      );
+    }
+  }, [context, cardBackImage]);
 
   useEffect(() => {
-    // TODO - pass cardWidth etc as props to define canvas size
-    // TODO - Hold 'last card' image and render on rhs if exists
-    const cardTurnTime = 800;
-    const cardPauseTime = 200;
+    // TODO - put animation timings somewhere sensible
+    // TODO put zfactor somewhere sensible
+    const cardTurnTime = 200;
+    const cardPauseTime = 600;
     const cardMoveTime = 400;
-
     const zFactor = 0.1;
+
     let start;
     let animationFrameId;
     const image = new Image();
@@ -47,7 +56,7 @@ export default function Canvas({
           context.fillRect(0, 0, context.canvas.width, context.canvas.height);
           context.drawImage(
             cardBackImage,
-            cardPadding,
+            2 * cardPadding + cardWidth,
             cardPadding,
             cardWidth,
             cardHeight
@@ -55,7 +64,7 @@ export default function Canvas({
           if (lastCard) {
             context.drawImage(
               lastCard,
-              2 * cardPadding + cardWidth,
+              cardPadding,
               cardPadding,
               cardWidth,
               cardHeight
@@ -75,7 +84,8 @@ export default function Canvas({
                   0,
                   1,
                   cardBackImage.height,
-                  cardPadding +
+                  2 * cardPadding +
+                    cardWidth +
                     ((i * cardWidth) / cardBackImage.width) *
                       (1 - (2 * stepDistance) / cardWidth) +
                     stepDistance,
@@ -94,7 +104,8 @@ export default function Canvas({
                   0,
                   1,
                   image.height,
-                  cardPadding +
+                  2 * cardPadding +
+                    cardWidth +
                     cardWidth -
                     (((i * cardWidth) / image.width) *
                       (1 - (2 * stepDistance) / cardWidth) +
@@ -108,7 +119,7 @@ export default function Canvas({
           } else if (elapsed < cardTurnTime + cardPauseTime) {
             context.drawImage(
               image,
-              cardPadding,
+              2 * cardPadding + cardWidth,
               cardPadding,
               cardWidth,
               cardHeight
@@ -120,7 +131,7 @@ export default function Canvas({
             );
             context.drawImage(
               image,
-              cardPadding + stepDistance,
+              2 * cardPadding + cardWidth - stepDistance,
               cardPadding,
               cardWidth,
               cardHeight
@@ -128,7 +139,7 @@ export default function Canvas({
           } else {
             context.drawImage(
               image,
-              2 * cardPadding + cardWidth,
+              cardPadding,
               cardPadding,
               cardWidth,
               cardHeight
@@ -137,17 +148,6 @@ export default function Canvas({
             setLastCard(image);
           }
 
-          // else if (stepDistance > cardWidth * 2) {
-          //   context.drawImage(image, cardPadding, 0, cardWidth, cardHeight);
-          // } else {
-          //   context.drawImage(
-          //     image,
-          //     cardPadding + stepDistance - cardWidth,
-          //     0,
-          //     cardWidth,
-          //     cardHeight
-          //   );
-          // }
           if (elapsed < cardTurnTime + cardPauseTime + cardMoveTime) {
             animationFrameId = window.requestAnimationFrame(animateCard);
           }

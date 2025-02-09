@@ -11,9 +11,9 @@ function App() {
   const [cardsRemaining, setCardsRemaining] = useState(null);
   const [imageSrc, SetImageSrc] = useState(null);
   const [cardBackImage, setCardBackImage] = useState(null);
-  const [cardWidth, setCardWidth] = useState(90);
-  const [cardHeight, setCardHeight] = useState(130);
-  const [cardPadding, setCardPadding] = useState(20);
+  const [cardWidth, setCardWidth] = useState(120);
+  const [cardHeight, setCardHeight] = useState(166);
+  const [cardPadding, setCardPadding] = useState(40);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,6 +22,10 @@ function App() {
         const cardBackImage = await fetchCardBack();
         setCardBackImage(cardBackImage);
         setDeckId(deckId);
+        setCardHeight(
+          Math.floor((cardWidth * cardBackImage.height) / cardBackImage.width)
+        );
+
         setError(null);
       } catch (err) {
         setError(err.message);
@@ -35,7 +39,7 @@ function App() {
 
   const draw = async () => {
     const { cardImageSrc, cardsRemaining } = await fetchCard(deckId);
-    console.log({ cardImageSrc, cardsRemaining });
+    // console.log({ cardImageSrc, cardsRemaining });
     SetImageSrc(cardImageSrc);
     setCardsRemaining(cardsRemaining);
   };
