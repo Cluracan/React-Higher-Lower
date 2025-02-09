@@ -6,6 +6,8 @@ export default function Canvas({
   cardWidth,
   cardPadding,
   cardHeight,
+  onStartAnimation,
+  onEndAnimation,
 }) {
   const canvasRef = useRef(null);
   const [context, setContext] = useState(null);
@@ -40,7 +42,7 @@ export default function Canvas({
     const cardPauseTime = 600;
     const cardMoveTime = 400;
     const zFactor = 0.1;
-
+    onStartAnimation();
     let start;
     let animationFrameId;
     const image = new Image();
@@ -146,6 +148,7 @@ export default function Canvas({
             );
 
             setLastCard(image);
+            onEndAnimation();
           }
 
           if (elapsed < cardTurnTime + cardPauseTime + cardMoveTime) {

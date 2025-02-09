@@ -14,6 +14,7 @@ function App() {
   const [cardWidth, setCardWidth] = useState(120);
   const [cardHeight, setCardHeight] = useState(166);
   const [cardPadding, setCardPadding] = useState(40);
+  const [animationActive, setAnimationActive] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,16 +33,26 @@ function App() {
         setDeckId(null);
       } finally {
         setLoading(false);
+        setAnimationActive(false);
       }
     };
     fetchData();
   }, []);
 
   const draw = async () => {
-    const { cardImageSrc, cardsRemaining } = await fetchCard(deckId);
-    // console.log({ cardImageSrc, cardsRemaining });
-    SetImageSrc(cardImageSrc);
-    setCardsRemaining(cardsRemaining);
+    if (!animationActive) {
+      const { cardImageSrc, cardsRemaining } = await fetchCard(deckId);
+      SetImageSrc(cardImageSrc);
+      setCardsRemaining(cardsRemaining);
+    }
+  };
+
+  const onStartAnimation = () => {
+    setAnimationActive(true);
+  };
+
+  const onEndAnimation = () => {
+    setAnimationActive(false);
   };
 
   return (
@@ -63,9 +74,12 @@ function App() {
           cardWidth={cardWidth}
           cardHeight={cardHeight}
           cardPadding={cardPadding}
+          onStartAnimation={onStartAnimation}
+          onEndAnimation={onEndAnimation}
         />
       </div>
       <p>{cardsRemaining} cards remaining</p>
+      <p> animation active: {animationActive ? "true" : "false"}</p>
     </>
   );
 }
