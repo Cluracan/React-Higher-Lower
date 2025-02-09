@@ -1,31 +1,31 @@
 import { useState, useEffect } from "react";
-import fetchDeckData from "./FetchDeck";
+import { fetchCard, fetchDeckId, fetchCardBack } from "./DeckOfCardsAPI";
 import reactLogo from "./assets/react.svg";
 import Canvas from "./Canvas";
 import "./App.css";
 
-const imageArray = [
-  "https://deckofcardsapi.com/static/img/JC.png",
-  "https://deckofcardsapi.com/static/img/QC.png",
-  "https://deckofcardsapi.com/static/img/KC.png",
-];
-
 function App() {
-  const [deck, setDeck] = useState(null);
+  const [deckId, setDeckId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [imageIndex, setImageIndex] = useState(0);
+  const [cardsRemaining, setCardsRemaining] = useState(null);
   const [imageSrc, SetImageSrc] = useState(null);
+  const [cardBackImage, setCardBackImage] = useState(null);
+  const [cardWidth, setCardWidth] = useState(90);
+  const [cardHeight, setCardHeight] = useState(130);
+  const [cardPadding, setCardPadding] = useState(20);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const deckArray = await fetchDeckData();
-        setDeck(deckArray);
-        console.log(deckArray);
+        const deckId = await fetchDeckId();
+        const cardBackImage = await fetchCardBack();
+        setCardBackImage(cardBackImage);
+        setDeckId(deckId);
         setError(null);
       } catch (err) {
         setError(err.message);
-        setDeck(null);
+        setDeckId(null);
       } finally {
         setLoading(false);
       }
@@ -33,14 +33,11 @@ function App() {
     fetchData();
   }, []);
 
-  //TODO - Remove this:
-  function handleShowDeck() {
-    setImageIndex((imageIndex + 1) % 3);
-  }
-
-  const draw = () => {
-    SetImageSrc(imageArray[imageIndex]);
-    setImageIndex((imageIndex + 1) % 3);
+  const draw = async () => {
+    const { cardImageSrc, cardsRemaining } = await fetchCard(deckId);
+    console.log({ cardImageSrc, cardsRemaining });
+    SetImageSrc(cardImageSrc);
+    setCardsRemaining(cardsRemaining);
   };
 
   return (
@@ -56,8 +53,15 @@ function App() {
           className="logo react"
           alt="React logo"
         />
-        <Canvas imageSrc={imageSrc} />
+        <Canvas
+          imageSrc={imageSrc}
+          cardBackImage={cardBackImage}
+          cardWidth={cardWidth}
+          cardHeight={cardHeight}
+          cardPadding={cardPadding}
+        />
       </div>
+      <p>{cardsRemaining} cards remaining</p>
     </>
   );
 }

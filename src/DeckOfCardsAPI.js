@@ -1,4 +1,8 @@
-const deckUrl = "https://deckofcardsapi.com/api/deck/new/draw/?count=52";
+const deckIdUrl =
+  "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1";
+const drawCardUrl = (deckId) =>
+  `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`;
+const cardBackUrl = "https://deckofcardsapi.com/static/img/back.png";
 
 const convertToInteger = (cardValue) => {
   switch (cardValue) {
@@ -15,14 +19,34 @@ const convertToInteger = (cardValue) => {
   }
 };
 
-export default async function fetchDeckData() {
-  const response = await fetch(deckUrl);
+export async function fetchDeckId() {
+  const response = await fetch(deckIdUrl);
   if (!response.ok) {
     throw new Error(`Response status: ${response.status}`);
   }
   const deckData = await response.json();
-  const deckArray = deckData.cards.map((data) => {
-    return { value: convertToInteger(data.value), image: data.images.svg };
+  return deckData.deck_id;
+}
+
+export async function fetchCardBack() {
+  return new Promise((res, rej) => {
+    const cardBack = new Image();
+    cardBack.src = cardBackUrl;
+    cardBack.onload = () => {
+      res(cardBack);
+    };
   });
-  return deckArray;
+}
+
+export async function fetchCard(deckId) {
+  const response = await fetch(drawCardUrl(deckId));
+  if (!response.ok) {
+    throw new Error(`Response status: ${response.status}`);
+  }
+  const cardData = await response.json();
+
+  return {
+    cardImageSrc: cardData.cards[0].image,
+    cardsRemaining: cardData.remaining,
+  };
 }
