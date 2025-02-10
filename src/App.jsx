@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { fetchCard, fetchDeckId, fetchCardBack } from "./DeckOfCardsAPI";
 import { HighLowButtons, StartButton } from "./buttons";
+import Scoreboard from "./Scoreboard";
 import reactLogo from "./assets/react.svg";
 import Canvas from "./Canvas";
 import "./App.css";
@@ -17,6 +18,7 @@ function App() {
   const [animationActive, setAnimationActive] = useState(true);
   const [gameInProgress, setGameInProgress] = useState(false);
   const [drawnCards, setDrawnCards] = useState([]);
+  const [score, setScore] = useState(0);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -45,7 +47,27 @@ function App() {
       const { cardImageSrc, cardValue } = await fetchCard(deckId);
       SetImageSrc(cardImageSrc);
       setDrawnCards([...drawnCards, cardValue]);
+      console.log(cardValue);
+      return cardValue;
     }
+  };
+
+  const handleHighClick = async () => {
+    const curCard = await draw();
+    const lastCard = drawnCards[drawnCards.length - 1];
+    if (curCard > lastCard) {
+      setScore(score + 1);
+    }
+    console.log(drawnCards, curCard);
+  };
+
+  const handleLowClick = async () => {
+    const curCard = await draw();
+    const lastCard = drawnCards[drawnCards.length - 1];
+    if (curCard < lastCard) {
+      setScore(score + 1);
+    }
+    console.log(drawnCards, curCard);
   };
 
   const handleStartClick = () => {
@@ -88,11 +110,16 @@ function App() {
           setAnimationActive={setAnimationActive}
         />
         {!gameInProgress && <StartButton onClick={handleStartClick} />}
-        {gameInProgress && <HighLowButtons />}
+        {gameInProgress && (
+          <HighLowButtons
+            onClick={{ high: handleHighClick, low: handleLowClick }}
+          />
+        )}
       </div>
       <p>{52 - drawnCards.length} cards remaining</p>
       <p>drawn cards {drawnCards}</p>
       <p> animation active: {animationActive ? "true" : "false"}</p>
+      <Scoreboard score={score} />
     </>
   );
 }

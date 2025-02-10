@@ -1,8 +1,8 @@
-export function HighLowButtons() {
+export function HighLowButtons({ onClick }) {
   return (
     <div>
-      <button>Higher</button>
-      <button>Lower</button>
+      <button onClick={onClick.high}>Higher</button>
+      <button onClick={onClick.low}>Lower</button>
     </div>
   );
 }
