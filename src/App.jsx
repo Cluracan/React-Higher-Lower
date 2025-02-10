@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { fetchCard, fetchDeckId, fetchCardBack } from "./DeckOfCardsAPI";
+import { HighLowButtons, StartButton } from "./buttons";
 import reactLogo from "./assets/react.svg";
 import Canvas from "./Canvas";
 import "./App.css";
@@ -15,6 +16,7 @@ function App() {
   const [cardHeight, setCardHeight] = useState(166);
   const [cardPadding, setCardPadding] = useState(40);
   const [animationActive, setAnimationActive] = useState(true);
+  const [gameInProgress, setGameInProgress] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,20 +49,27 @@ function App() {
     }
   };
 
-  const onStartAnimation = () => {
-    setAnimationActive(true);
+  const handleStartClick = () => {
+    //check full deck? or only display if game over and deck reloaded?
+    draw();
+    setGameInProgress(true);
   };
 
-  const onEndAnimation = () => {
-    setAnimationActive(false);
-  };
+  //SEEM TO HAVE GOT SETANIMATIONACTIVE WORKING AS PROP - just keeping in for a bit
+  // const onStartAnimation = () => {
+  //   //think this is ok? it is an anonymous 'handleStartAnimation' - or maybe should be handle anyway as the event is not listened for explicitly
+  //   setAnimationActive(true);
+  // };
+
+  // const onEndAnimation = () => {
+  //   setAnimationActive(false);
+  // };
 
   return (
     <>
       <div>
         {loading && <h1>Marvin is loading</h1>}
         {error && <h1>Marvin has encountered an error</h1>}
-
         {/* Remove this img! */}
         <img
           onClick={draw}
@@ -74,9 +83,12 @@ function App() {
           cardWidth={cardWidth}
           cardHeight={cardHeight}
           cardPadding={cardPadding}
-          onStartAnimation={onStartAnimation}
-          onEndAnimation={onEndAnimation}
+          // onStartAnimation={onStartAnimation}
+          // onEndAnimation={onEndAnimation}
+          setAnimationActive={setAnimationActive}
         />
+        {!gameInProgress && <StartButton onClick={handleStartClick} />}
+        {gameInProgress && <HighLowButtons />}
       </div>
       <p>{cardsRemaining} cards remaining</p>
       <p> animation active: {animationActive ? "true" : "false"}</p>
