@@ -47,6 +47,6 @@ export async function fetchCard(deckId) {
 
   return {
     cardImageSrc: cardData.cards[0].image,
-    cardsRemaining: cardData.remaining,
+    cardValue: convertToInteger(cardData.cards[0].value),
   };
 }

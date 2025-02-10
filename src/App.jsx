@@ -9,7 +9,6 @@ function App() {
   const [deckId, setDeckId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [cardsRemaining, setCardsRemaining] = useState(null);
   const [imageSrc, SetImageSrc] = useState(null);
   const [cardBackImage, setCardBackImage] = useState(null);
   const [cardWidth, setCardWidth] = useState(120);
@@ -17,7 +16,7 @@ function App() {
   const [cardPadding, setCardPadding] = useState(40);
   const [animationActive, setAnimationActive] = useState(true);
   const [gameInProgress, setGameInProgress] = useState(false);
-
+  const [drawnCards, setDrawnCards] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -43,15 +42,16 @@ function App() {
 
   const draw = async () => {
     if (!animationActive) {
-      const { cardImageSrc, cardsRemaining } = await fetchCard(deckId);
+      const { cardImageSrc, cardValue } = await fetchCard(deckId);
       SetImageSrc(cardImageSrc);
-      setCardsRemaining(cardsRemaining);
+      setDrawnCards([...drawnCards, cardValue]);
     }
   };
 
   const handleStartClick = () => {
     //check full deck? or only display if game over and deck reloaded?
     draw();
+    //don't use draw (assuming draw will check value against old (or maybe include lastCard nullcheck so mightbe ok))
     setGameInProgress(true);
   };
 
@@ -90,7 +90,8 @@ function App() {
         {!gameInProgress && <StartButton onClick={handleStartClick} />}
         {gameInProgress && <HighLowButtons />}
       </div>
-      <p>{cardsRemaining} cards remaining</p>
+      <p>{52 - drawnCards.length} cards remaining</p>
+      <p>drawn cards {drawnCards}</p>
       <p> animation active: {animationActive ? "true" : "false"}</p>
     </>
   );
