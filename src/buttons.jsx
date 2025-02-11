@@ -1,8 +1,12 @@
-export function HighLowButtons({ onClick }) {
+export function HighLowButtons({ onClick, animationActive }) {
   return (
     <div>
-      <button onClick={() => onClick("high")}>Higher</button>
-      <button onClick={() => onClick("low")}>Lower</button>
+      <button disabled={animationActive} onClick={() => onClick("high")}>
+        Higher
+      </button>
+      <button disabled={animationActive} onClick={() => onClick("low")}>
+        Lower
+      </button>
     </div>
   );
 }

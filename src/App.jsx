@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
-import { fetchCard, fetchDeckId, fetchCardBack } from "./DeckOfCardsAPI";
+import {
+  fetchCard,
+  fetchDeckId,
+  fetchCardBack,
+  shuffleDeck,
+} from "./DeckOfCardsAPI";
 import { HighLowButtons, StartButton } from "./buttons";
 import Scoreboard from "./Scoreboard";
-import reactLogo from "./assets/react.svg";
 import Canvas from "./Canvas";
 import "./App.css";
 
@@ -44,10 +48,14 @@ function App() {
 
   const drawCard = async () => {
     if (!animationActive) {
-      const { cardImageSrc, cardValue } = await fetchCard(deckId);
+      const { cardImageSrc, cardValue, cardsRemaining } = await fetchCard(
+        deckId
+      );
       SetImageSrc(cardImageSrc);
       setDrawnCards([...drawnCards, cardValue]);
+
       console.log(cardValue);
+      console.log({ cardsRemaining });
       return cardValue;
     }
   };
@@ -55,25 +63,24 @@ function App() {
   const handleHighLowClick = async (prediction) => {
     const curCard = await drawCard();
     const lastCard = drawnCards[drawnCards.length - 1];
-    switch (prediction) {
-      case "high":
-        if (curCard > lastCard) {
-          setScore(score + 1);
-        }
-        break;
-      case "low":
-        if (curCard < lastCard) {
-          setScore(score + 1);
-        }
-        break;
-      default:
-        console.error(`error in handleHighLow, received ${prediction}`);
+    if (
+      (prediction === "high" && curCard > lastCard) ||
+      (prediction === "low" && curCard < lastCard)
+    ) {
+      setScore(score + 1);
+    } else {
+      console.log("lose");
+      setGameInProgress(false);
+      setDrawnCards([]);
+      const response = await shuffleDeck(deckId);
+      console.log(response);
     }
+
     console.log(drawnCards, curCard);
   };
 
-  const handleStartClick = () => {
-    drawCard();
+  const handleStartClick = async () => {
+    await drawCard();
     setGameInProgress(true);
   };
 
@@ -82,13 +89,6 @@ function App() {
       <div>
         {loading && <h1>Marvin is loading</h1>}
         {error && <h1>Marvin has encountered an error</h1>}
-        {/* Remove this img! */}
-        <img
-          onClick={drawCard}
-          src={reactLogo}
-          className="logo react"
-          alt="React logo"
-        />
         <Canvas
           imageSrc={imageSrc}
           cardBackImage={cardBackImage}
@@ -98,7 +98,12 @@ function App() {
           setAnimationActive={setAnimationActive}
         />
         {!gameInProgress && <StartButton onClick={handleStartClick} />}
-        {gameInProgress && <HighLowButtons onClick={handleHighLowClick} />}
+        {gameInProgress && (
+          <HighLowButtons
+            onClick={handleHighLowClick}
+            animationActive={animationActive}
+          />
+        )}
       </div>
       <p>{52 - drawnCards.length} cards remaining</p>
       <p>drawn cards {drawnCards}</p>

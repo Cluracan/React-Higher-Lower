@@ -2,6 +2,10 @@ const deckIdUrl =
   "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1";
 const drawCardUrl = (deckId) =>
   `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`;
+
+const shuffleDeckUrl = (deckId) =>
+  `https://deckofcardsapi.com/api/deck/${deckId}/shuffle/`;
+
 const cardBackUrl = "https://deckofcardsapi.com/static/img/back.png";
 
 const convertToInteger = (cardValue) => {
@@ -48,5 +52,16 @@ export async function fetchCard(deckId) {
   return {
     cardImageSrc: cardData.cards[0].image,
     cardValue: convertToInteger(cardData.cards[0].value),
+    cardsRemaining: cardData.remaining,
   };
+}
+
+export async function shuffleDeck(deckId) {
+  const response = await fetch(shuffleDeckUrl(deckId));
+  if (!response.ok) {
+    throw new Error(`Response status: ${response.status}`);
+  }
+  const cardData = await response.json();
+
+  return cardData;
 }
