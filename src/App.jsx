@@ -19,6 +19,7 @@ function App() {
   const [gameInProgress, setGameInProgress] = useState(false);
   const [drawnCards, setDrawnCards] = useState([]);
   const [score, setScore] = useState(0);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -29,7 +30,6 @@ function App() {
         setCardHeight(
           Math.floor((cardWidth * cardBackImage.height) / cardBackImage.width)
         );
-
         setError(null);
       } catch (err) {
         setError(err.message);
@@ -42,7 +42,7 @@ function App() {
     fetchData();
   }, []);
 
-  const draw = async () => {
+  const drawCard = async () => {
     if (!animationActive) {
       const { cardImageSrc, cardValue } = await fetchCard(deckId);
       SetImageSrc(cardImageSrc);
@@ -52,40 +52,30 @@ function App() {
     }
   };
 
-  const handleHighClick = async () => {
-    const curCard = await draw();
+  const handleHighLowClick = async (prediction) => {
+    const curCard = await drawCard();
     const lastCard = drawnCards[drawnCards.length - 1];
-    if (curCard > lastCard) {
-      setScore(score + 1);
-    }
-    console.log(drawnCards, curCard);
-  };
-
-  const handleLowClick = async () => {
-    const curCard = await draw();
-    const lastCard = drawnCards[drawnCards.length - 1];
-    if (curCard < lastCard) {
-      setScore(score + 1);
+    switch (prediction) {
+      case "high":
+        if (curCard > lastCard) {
+          setScore(score + 1);
+        }
+        break;
+      case "low":
+        if (curCard < lastCard) {
+          setScore(score + 1);
+        }
+        break;
+      default:
+        console.error(`error in handleHighLow, received ${prediction}`);
     }
     console.log(drawnCards, curCard);
   };
 
   const handleStartClick = () => {
-    //check full deck? or only display if game over and deck reloaded?
-    draw();
-    //don't use draw (assuming draw will check value against old (or maybe include lastCard nullcheck so mightbe ok))
+    drawCard();
     setGameInProgress(true);
   };
-
-  //SEEM TO HAVE GOT SETANIMATIONACTIVE WORKING AS PROP - just keeping in for a bit
-  // const onStartAnimation = () => {
-  //   //think this is ok? it is an anonymous 'handleStartAnimation' - or maybe should be handle anyway as the event is not listened for explicitly
-  //   setAnimationActive(true);
-  // };
-
-  // const onEndAnimation = () => {
-  //   setAnimationActive(false);
-  // };
 
   return (
     <>
@@ -94,7 +84,7 @@ function App() {
         {error && <h1>Marvin has encountered an error</h1>}
         {/* Remove this img! */}
         <img
-          onClick={draw}
+          onClick={drawCard}
           src={reactLogo}
           className="logo react"
           alt="React logo"
@@ -105,16 +95,10 @@ function App() {
           cardWidth={cardWidth}
           cardHeight={cardHeight}
           cardPadding={cardPadding}
-          // onStartAnimation={onStartAnimation}
-          // onEndAnimation={onEndAnimation}
           setAnimationActive={setAnimationActive}
         />
         {!gameInProgress && <StartButton onClick={handleStartClick} />}
-        {gameInProgress && (
-          <HighLowButtons
-            onClick={{ high: handleHighClick, low: handleLowClick }}
-          />
-        )}
+        {gameInProgress && <HighLowButtons onClick={handleHighLowClick} />}
       </div>
       <p>{52 - drawnCards.length} cards remaining</p>
       <p>drawn cards {drawnCards}</p>
