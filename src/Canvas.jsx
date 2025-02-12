@@ -6,8 +6,6 @@ export default function Canvas({
   cardWidth,
   cardPadding,
   cardHeight,
-  onStartAnimation,
-  onEndAnimation,
   setAnimationActive,
 }) {
   const canvasRef = useRef(null);
@@ -39,11 +37,17 @@ export default function Canvas({
   useEffect(() => {
     // TODO - put animation timings somewhere sensible
     // TODO put zfactor somewhere sensible
+    console.log("useEff");
+    console.log({ imageSrc, context });
+    if (imageSrc === null && context) {
+      setLastCard(null);
+      return;
+    }
+    console.log(imageSrc);
     const cardTurnTime = 200;
     const cardPauseTime = 600;
     const cardMoveTime = 400;
     const zFactor = 0.1;
-    // onStartAnimation();
     setAnimationActive(true);
     let start;
     let animationFrameId;
@@ -150,7 +154,6 @@ export default function Canvas({
             );
 
             setLastCard(image);
-            // onEndAnimation();
             setAnimationActive(false);
           }
 
