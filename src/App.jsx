@@ -25,7 +25,6 @@ function App() {
   const [drawnCards, setDrawnCards] = useState([]);
   const [score, setScore] = useState(0);
   const highScore = useExternalStorage();
-  console.log({ highScore });
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -56,8 +55,6 @@ function App() {
       SetImageSrc(cardImageSrc);
       setDrawnCards([...drawnCards, cardValue]);
 
-      console.log(cardValue);
-      console.log({ cardsRemaining });
       return cardValue;
     }
   };
@@ -80,8 +77,6 @@ function App() {
       setDrawnCards([]);
       shuffleDeck(deckId);
     }
-
-    console.log(drawnCards, curCard);
   };
 
   const handleStartClick = async () => {

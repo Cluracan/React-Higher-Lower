@@ -11,7 +11,11 @@ function getSnapshot() {
 }
 
 function subscribe(callback) {
-  window.addEventListener("storage", callback);
+  (e) => {
+    if (e.key === "high-score") {
+      window.addEventListener("storage", callback);
+    }
+  };
   return () => {
     window.removeEventListener("storage", callback);
   };

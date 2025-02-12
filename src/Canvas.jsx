@@ -37,13 +37,12 @@ export default function Canvas({
   useEffect(() => {
     // TODO - put animation timings somewhere sensible
     // TODO put zfactor somewhere sensible
-    console.log("useEff");
-    console.log({ imageSrc, context });
+
     if (imageSrc === null && context) {
       setLastCard(null);
       return;
     }
-    console.log(imageSrc);
+
     const cardTurnTime = 200;
     const cardPauseTime = 600;
     const cardMoveTime = 400;
