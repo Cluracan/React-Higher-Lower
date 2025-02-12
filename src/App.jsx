@@ -8,6 +8,7 @@ import {
 import { HighLowButtons, StartButton } from "./buttons";
 import Scoreboard from "./Scoreboard";
 import Canvas from "./Canvas";
+import { useExternalStorage } from "./useExternalStorage";
 import "./App.css";
 
 function App() {
@@ -23,7 +24,8 @@ function App() {
   const [gameInProgress, setGameInProgress] = useState(false);
   const [drawnCards, setDrawnCards] = useState([]);
   const [score, setScore] = useState(0);
-
+  const highScore = useExternalStorage();
+  console.log({ highScore });
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -70,18 +72,24 @@ function App() {
       setScore(score + 1);
     } else {
       console.log("lose");
+      if (score > highScore) {
+        localStorage.setItem("high-score", score);
+      }
+      setScore(0);
       setGameInProgress(false);
       setDrawnCards([]);
-      const response = await shuffleDeck(deckId);
-      console.log(response);
+      shuffleDeck(deckId);
     }
 
     console.log(drawnCards, curCard);
   };
 
   const handleStartClick = async () => {
-    await drawCard();
-    setGameInProgress(true);
+    if (!animationActive) {
+      SetImageSrc(null);
+      await drawCard();
+      setGameInProgress(true);
+    }
   };
 
   return (
@@ -108,7 +116,7 @@ function App() {
       <p>{52 - drawnCards.length} cards remaining</p>
       <p>drawn cards {drawnCards}</p>
       <p> animation active: {animationActive ? "true" : "false"}</p>
-      <Scoreboard score={score} />
+      <Scoreboard score={score} highScore={highScore} />
     </>
   );
 }
