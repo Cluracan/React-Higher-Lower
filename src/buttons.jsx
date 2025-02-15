@@ -1,16 +1,25 @@
-export function HighLowButtons({ onClick, animationActive }) {
+export function HighLowButtons({ onClick, animationActive, highLow }) {
   return (
-    <div>
-      <button disabled={animationActive} onClick={() => onClick("high")}>
-        Higher
+    <>
+      <button
+        style={{ margin: "1rem" }}
+        disabled={animationActive}
+        onClick={() => onClick(highLow)}
+      >
+        {highLow}
       </button>
-      <button disabled={animationActive} onClick={() => onClick("low")}>
-        Lower
-      </button>
-    </div>
+    </>
   );
 }
 
-export function StartButton({ onClick }) {
-  return <button onClick={onClick}>Start</button>;
+export function StartButton({ onClick, animationActive }) {
+  return (
+    <button
+      disabled={animationActive}
+      style={{ margin: "1rem" }}
+      onClick={onClick}
+    >
+      Start
+    </button>
+  );
 }

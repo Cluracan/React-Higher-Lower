@@ -20,7 +20,7 @@ export default function Canvas({
   useEffect(() => {
     if (!context) return;
     //TODO in App, start button should call draw - this is fine as app keeps check of score, so startButton just doesn't invoke high/low check
-
+    console.log(cardBackImage);
     context.fillStyle = "green";
     context.fillRect(0, 0, context.canvas.width, context.canvas.height);
     if (cardBackImage) {
@@ -32,7 +32,7 @@ export default function Canvas({
         cardHeight
       );
     }
-  }, [context, cardBackImage]);
+  }, [context, cardBackImage, cardHeight]);
 
   useEffect(() => {
     // TODO - put animation timings somewhere sensible
@@ -40,6 +40,30 @@ export default function Canvas({
 
     if (imageSrc === null && context) {
       setLastCard(null);
+      return;
+    }
+
+    if (imageSrc === lastCard?.src) {
+      const image = new Image();
+      image.src = imageSrc;
+      image.onload = () => {
+        context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+        context.drawImage(
+          cardBackImage,
+          2 * cardPadding + cardWidth,
+          cardPadding,
+          cardWidth,
+          cardHeight
+        );
+
+        context.drawImage(
+          lastCard,
+          cardPadding,
+          cardPadding,
+          cardWidth,
+          cardHeight
+        );
+      };
       return;
     }
 
@@ -166,7 +190,7 @@ export default function Canvas({
     return () => {
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, [imageSrc]);
+  }, [imageSrc, cardHeight]);
 
   return (
     <canvas
