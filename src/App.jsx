@@ -8,10 +8,11 @@ import {
 
 import Scoreboard from "./Scoreboard";
 import Canvas from "./Canvas";
-import { useExternalStorage } from "./useExternalStorage";
+import { useExternalStorage } from "../Hooks/useExternalStorage";
 import "./App.css";
-import { ButtonDisplay } from "./buttonHolder";
-
+import { ButtonDisplay } from "./ButtonHolder";
+import useWindowDimensions from "../Hooks/UseWindowDimensions";
+import Header from "./Header";
 function App() {
   const [deckId, setDeckId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -27,6 +28,7 @@ function App() {
   const [score, setScore] = useState(0);
   const highScore = useExternalStorage();
   const dialogRef = useRef(null);
+  const { height, width } = useWindowDimensions();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -88,13 +90,19 @@ function App() {
 
   return (
     <>
-      <button onClick={() => dialogRef.current?.showModal()}>click me!</button>
-      <div className="scoreboard">
-        <p>{52 - drawnCards.length} cards remaining</p>
-        <p>drawn cards {drawnCards}</p>
-        <p> animation active: {animationActive ? "true" : "false"}</p>
-        <Scoreboard score={score} highScore={highScore} />
-      </div>
+      <Header>
+        <button onClick={() => dialogRef.current?.showModal()}>
+          click me!
+        </button>
+      </Header>
+
+      <Scoreboard
+        score={score}
+        highScore={highScore}
+        cardsRemaining={52 - drawnCards.length}
+        animationActive={animationActive}
+      />
+
       <div className="canvas">
         {loading && <h1>Marvin is loading</h1>}
         {error && <h1>Marvin has encountered an error</h1>}
@@ -114,24 +122,39 @@ function App() {
         animationActive={animationActive}
       />
       <dialog ref={dialogRef}>
-        I am a dialog
+        Display Options
         <form>
           <label>
             Card Size
             <input
               type="range"
               min="10"
-              max="200"
+              max={0.9 * 0.5 * (width - 3 * cardPadding)}
               value={cardWidth || "100"}
               onChange={(e) => {
-                setCardWidth(Math.floor(parseInt(e.target.value)));
-                setCardHeight(
-                  Math.floor(
-                    (cardWidth * cardBackImage.height) / cardBackImage.width
-                  )
-                );
+                if (Math.abs(e.target.value - cardWidth) > 1) {
+                  setCardWidth(Math.floor(parseInt(e.target.value)));
+                  setCardHeight(
+                    Math.floor(
+                      (cardWidth * cardBackImage.height) / cardBackImage.width
+                    )
+                  );
+                }
               }}
-            ></input>
+            />
+          </label>
+          <label>
+            Padding Size
+            <input
+              type="range"
+              min="5"
+              max={0.9 * (1 / 3) * (width - 2 * cardWidth)}
+              value={cardPadding || "20"}
+              onChange={(e) => {
+                console.log(height);
+                setCardPadding(Math.floor(parseInt(e.target.value)));
+              }}
+            />
           </label>
         </form>
       </dialog>

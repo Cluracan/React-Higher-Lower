@@ -1,8 +1,15 @@
-export default function Scoreboard({ score, highScore }) {
+export default function Scoreboard({
+  score,
+  highScore,
+  cardsRemaining,
+  animationActive,
+}) {
   return (
-    <div>
+    <div className="scoreboard">
       <p>Current Score: {score}</p>
-      <p>Highscore: {highScore}</p>
+      <p>High score: {highScore}</p>
+      <p>Cards Remaining: {cardsRemaining}</p>
+      <p>Animation Active: {animationActive ? "True" : "False"}</p>
     </div>
   );
 }
