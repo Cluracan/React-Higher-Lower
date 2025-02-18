@@ -5,7 +5,7 @@ import {
   fetchCardBack,
   shuffleDeck,
 } from "./DeckOfCardsAPI";
-
+import { animationSpeedData } from "./config";
 import Scoreboard from "./Scoreboard";
 import Canvas from "./Canvas";
 import { useExternalStorage } from "../Hooks/useExternalStorage";
@@ -29,6 +29,7 @@ function App() {
   const highScore = useExternalStorage();
   const dialogRef = useRef(null);
   const { height, width } = useWindowDimensions();
+  const [animationSpeedIndex, setAnimationSpeedIndex] = useState(1);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -113,6 +114,8 @@ function App() {
           cardHeight={cardHeight}
           cardPadding={cardPadding}
           setAnimationActive={setAnimationActive}
+          // animationSpeedIndex={animationSpeedIndex}
+          animationSpeedData={animationSpeedData[animationSpeedIndex]}
         />
       </div>
       <ButtonDisplay
@@ -122,37 +125,17 @@ function App() {
         animationActive={animationActive}
       />
       <dialog ref={dialogRef}>
-        Display Options
+        Options
         <form>
           <label>
-            Card Size
+            Animation Speed: {animationSpeedData[animationSpeedIndex].desc}
             <input
               type="range"
-              min="10"
-              max={0.9 * 0.5 * (width - 3 * cardPadding)}
-              value={cardWidth || "100"}
+              min="0"
+              max="2"
+              value={animationSpeedIndex || 1}
               onChange={(e) => {
-                if (Math.abs(e.target.value - cardWidth) > 1) {
-                  setCardWidth(Math.floor(parseInt(e.target.value)));
-                  setCardHeight(
-                    Math.floor(
-                      (cardWidth * cardBackImage.height) / cardBackImage.width
-                    )
-                  );
-                }
-              }}
-            />
-          </label>
-          <label>
-            Padding Size
-            <input
-              type="range"
-              min="5"
-              max={0.9 * (1 / 3) * (width - 2 * cardWidth)}
-              value={cardPadding || "20"}
-              onChange={(e) => {
-                console.log(height);
-                setCardPadding(Math.floor(parseInt(e.target.value)));
+                setAnimationSpeedIndex(e.target.value);
               }}
             />
           </label>
@@ -163,3 +146,49 @@ function App() {
 }
 
 export default App;
+
+/*
+
+.
+.
+.
+.
+
+*/
+{
+  /* Display Options
+  <form>
+    <label>
+      Card Size
+      <input
+        type="range"
+        min="10"
+        max={0.9 * 0.5 * (width - 3 * cardPadding)}
+        value={cardWidth || "100"}
+        onChange={(e) => {
+          if (Math.abs(e.target.value - cardWidth) > 1) {
+            setCardWidth(Math.floor(parseInt(e.target.value)));
+            setCardHeight(
+              Math.floor(
+                (cardWidth * cardBackImage.height) / cardBackImage.width
+              )
+            );
+          }
+        }}
+      />
+    </label>
+    <label>
+      Padding Size
+      <input
+        type="range"
+        min="5"
+        max={0.9 * (1 / 3) * (width - 2 * cardWidth)}
+        value={cardPadding || "20"}
+        onChange={(e) => {
+          console.log(height);
+          setCardPadding(Math.floor(parseInt(e.target.value)));
+        }}
+      />
+    </label>
+  </form> */
+}

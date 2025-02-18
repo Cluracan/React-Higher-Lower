@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, startTransition } from "react";
-
+import { cardFlipHeightFactor } from "./config";
 export default function Canvas({
   imageSrc,
   cardBackImage,
@@ -7,10 +7,12 @@ export default function Canvas({
   cardPadding,
   cardHeight,
   setAnimationActive,
+  animationSpeedData,
 }) {
   const canvasRef = useRef(null);
   const [context, setContext] = useState(null);
   const [lastCard, setLastCard] = useState(null);
+  const { cardTurnTime, cardPauseTime, cardMoveTime } = animationSpeedData;
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -33,9 +35,6 @@ export default function Canvas({
   }, [context, cardBackImage, cardHeight, cardPadding]);
 
   useEffect(() => {
-    // TODO - put animation timings somewhere sensible
-    // TODO put zfactor somewhere sensible
-
     if (imageSrc === null && context) {
       setLastCard(null);
       return;
@@ -61,10 +60,6 @@ export default function Canvas({
       return;
     }
 
-    const cardTurnTime = 200;
-    const cardPauseTime = 600;
-    const cardMoveTime = 400;
-    const zFactor = 0.1;
     setAnimationActive(true);
     let start;
     let animationFrameId;
@@ -101,7 +96,8 @@ export default function Canvas({
             );
 
             if (stepDistance < cardWidth / 2) {
-              const heightMultiplier = (stepDistance / cardWidth) * zFactor;
+              const heightMultiplier =
+                (stepDistance / cardWidth) * cardFlipHeightFactor;
               for (let i = 0; i <= cardBackImage.width; i++) {
                 context.drawImage(
                   cardBackImage,
@@ -121,7 +117,7 @@ export default function Canvas({
               }
             } else {
               const heightMultiplier =
-                (zFactor * (cardWidth - stepDistance)) / cardWidth;
+                (cardFlipHeightFactor * (cardWidth - stepDistance)) / cardWidth;
               for (let i = 0; i <= image.width; i++) {
                 context.drawImage(
                   image,
