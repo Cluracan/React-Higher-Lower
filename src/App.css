@@ -37,11 +37,57 @@ dialog {
 
 form {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 1rem;
 }
 
 label {
   display: flex;
   flex-direction: column;
+}
+
+/* testing slider*/
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 22px;
+}
+
+.toggle input {
+  display: none;/
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgb(51, 51, 51);
+  transition: 0.4s;
+  border-radius: 12px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 1px;
+  bottom: 1px;
+  background-color: rgb(167, 167, 167);
+  transition: 0.4s;
+ 
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #060;
+}
+
+input:checked + .slider:before {
+  transform: translateX(16px);
+
 }

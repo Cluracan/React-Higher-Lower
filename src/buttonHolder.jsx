@@ -5,6 +5,7 @@ export function ButtonDisplay({
   onHighLowClick,
   animationActive,
   gameInProgress,
+  cheatMode,
 }) {
   if (gameInProgress) {
     return (
@@ -19,6 +20,7 @@ export function ButtonDisplay({
           animationActive={animationActive}
           highLow={"Lower"}
         />
+        cheatMode: {cheatMode ? "ON" : "OFF"}
       </div>
     );
   } else {

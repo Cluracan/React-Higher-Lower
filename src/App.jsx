@@ -13,6 +13,7 @@ import "./App.css";
 import { ButtonDisplay } from "./ButtonHolder";
 import useWindowDimensions from "../Hooks/UseWindowDimensions";
 import Header from "./Header";
+import { Dialog } from "./Dialog";
 function App() {
   const [deckId, setDeckId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -27,9 +28,11 @@ function App() {
   const [drawnCards, setDrawnCards] = useState([]);
   const [score, setScore] = useState(0);
   const highScore = useExternalStorage();
-  const dialogRef = useRef(null);
   const { height, width } = useWindowDimensions();
+  const dialogRef = useRef(null);
   const [animationSpeedIndex, setAnimationSpeedIndex] = useState(1);
+  const [cheatMode, setCheatMode] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -123,8 +126,16 @@ function App() {
         onStartClick={handleStartClick}
         onHighLowClick={handleHighLowClick}
         animationActive={animationActive}
+        cheatMode={cheatMode}
       />
-      <dialog ref={dialogRef}>
+      <Dialog
+        ref={dialogRef}
+        animationSpeedIndex={animationSpeedIndex}
+        setAnimationSpeedIndex={setAnimationSpeedIndex}
+        cheatMode={cheatMode}
+        setCheatMode={setCheatMode}
+      />
+      {/* <dialog ref={dialogRef}>
         Options
         <form>
           <label>
@@ -140,7 +151,7 @@ function App() {
             />
           </label>
         </form>
-      </dialog>
+      </dialog> */}
     </>
   );
 }
