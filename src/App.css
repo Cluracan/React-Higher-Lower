@@ -15,8 +15,7 @@
 }
 
 .button-holder {
-  width: 8vw;
-  margin: 4rem;
+  min-width: 8vw;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;

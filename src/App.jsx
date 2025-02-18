@@ -135,23 +135,6 @@ function App() {
         cheatMode={cheatMode}
         setCheatMode={setCheatMode}
       />
-      {/* <dialog ref={dialogRef}>
-        Options
-        <form>
-          <label>
-            Animation Speed: {animationSpeedData[animationSpeedIndex].desc}
-            <input
-              type="range"
-              min="0"
-              max="2"
-              value={animationSpeedIndex || 1}
-              onChange={(e) => {
-                setAnimationSpeedIndex(e.target.value);
-              }}
-            />
-          </label>
-        </form>
-      </dialog> */}
     </>
   );
 }
