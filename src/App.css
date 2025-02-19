@@ -26,6 +26,7 @@
 }
 
 dialog {
+  min-width: 250px;
   border: none;
   border-top: 1px solid rgb(116, 116, 116);
   background-color: rgb(61, 61, 61);

@@ -14,6 +14,34 @@ import { ButtonDisplay } from "./ButtonHolder";
 import useWindowDimensions from "../Hooks/UseWindowDimensions";
 import Header from "./Header";
 import { Dialog } from "./Dialog";
+
+const calculateHighLowProbabilities = (usedCards) => {
+  if (!usedCards) return null;
+  const currentCard = usedCards[usedCards.length - 1];
+  const usedLowerCardCount = usedCards.filter(
+    (card) => card < currentCard
+  ).length;
+  const usedHigherCardCount = usedCards.filter(
+    (card) => card > currentCard
+  ).length;
+  const remainingCardCount = 52 - usedCards.length;
+  let remainingHigherCardCount = (13 - currentCard) * 4 - usedHigherCardCount;
+  let remainingLowerCardCount = (currentCard - 1) * 4 - usedLowerCardCount;
+  if (remainingHigherCardCount < 0) {
+    remainingHigherCardCount = 0;
+  }
+  if (remainingLowerCardCount < 0) {
+    remainingLowerCardCount = 0;
+  }
+
+  return {
+    highChance: Math.round(
+      (remainingHigherCardCount / remainingCardCount) * 100
+    ),
+    lowChance: Math.round((remainingLowerCardCount / remainingCardCount) * 100),
+  };
+};
+
 function App() {
   const [deckId, setDeckId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -32,6 +60,7 @@ function App() {
   const dialogRef = useRef(null);
   const [animationSpeedIndex, setAnimationSpeedIndex] = useState(1);
   const [cheatMode, setCheatMode] = useState(false);
+  const [highLowProbability, setHighLowProbability] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,7 +89,9 @@ function App() {
       const { cardImageSrc, cardValue } = await fetchCard(deckId);
       SetImageSrc(cardImageSrc);
       setDrawnCards([...drawnCards, cardValue]);
-
+      setHighLowProbability(
+        calculateHighLowProbabilities([...drawnCards, cardValue])
+      );
       return cardValue;
     }
   };
@@ -117,7 +148,6 @@ function App() {
           cardHeight={cardHeight}
           cardPadding={cardPadding}
           setAnimationActive={setAnimationActive}
-          // animationSpeedIndex={animationSpeedIndex}
           animationSpeedData={animationSpeedData[animationSpeedIndex]}
         />
       </div>
@@ -126,7 +156,7 @@ function App() {
         onStartClick={handleStartClick}
         onHighLowClick={handleHighLowClick}
         animationActive={animationActive}
-        cheatMode={cheatMode}
+        cardProbability={cheatMode ? highLowProbability : null}
       />
       <Dialog
         ref={dialogRef}

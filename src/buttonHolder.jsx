@@ -5,7 +5,8 @@ export function ButtonDisplay({
   onHighLowClick,
   animationActive,
   gameInProgress,
-  cheatMode,
+
+  cardProbability,
 }) {
   if (gameInProgress) {
     return (
@@ -14,13 +15,14 @@ export function ButtonDisplay({
           onClick={onHighLowClick}
           animationActive={animationActive}
           highLow={"Higher"}
+          cardProbability={cardProbability?.highChance}
         />
         <HighLowButtons
           onClick={onHighLowClick}
           animationActive={animationActive}
           highLow={"Lower"}
+          cardProbability={cardProbability?.lowChance}
         />
-        cheatMode: {cheatMode ? "ON" : "OFF"}
       </div>
     );
   } else {

@@ -1,4 +1,9 @@
-export function HighLowButtons({ onClick, animationActive, highLow }) {
+export function HighLowButtons({
+  onClick,
+  animationActive,
+  highLow,
+  cardProbability,
+}) {
   return (
     <>
       <button
@@ -7,6 +12,9 @@ export function HighLowButtons({ onClick, animationActive, highLow }) {
         onClick={() => onClick(highLow)}
       >
         {highLow}
+        <br />
+        {cardProbability}
+        {cardProbability ? "%" : ""}
       </button>
     </>
   );
