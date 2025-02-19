@@ -7,7 +7,7 @@ export function HighLowButtons({
   return (
     <>
       <button
-        style={{ margin: "1rem" }}
+        // style={{ margin: "1rem" }}
         disabled={animationActive}
         onClick={() => onClick(highLow)}
       >
@@ -24,7 +24,7 @@ export function StartButton({ onClick, animationActive }) {
   return (
     <button
       disabled={animationActive}
-      style={{ margin: "1rem" }}
+      // style={{ margin: "1rem" }}
       onClick={onClick}
     >
       Start

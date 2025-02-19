@@ -27,7 +27,9 @@ export function ButtonDisplay({
     );
   } else {
     return (
-      <StartButton onClick={onStartClick} animationActive={animationActive} />
+      <div className="button-holder">
+        <StartButton onClick={onStartClick} animationActive={animationActive} />
+      </div>
     );
   }
 }

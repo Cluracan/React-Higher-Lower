@@ -48,7 +48,7 @@ function App() {
   const [error, setError] = useState(null);
   const [imageSrc, SetImageSrc] = useState(null);
   const [cardBackImage, setCardBackImage] = useState(null);
-  const [cardWidth, setCardWidth] = useState(120);
+  const [cardWidth, setCardWidth] = useState(200);
   const [cardHeight, setCardHeight] = useState(166);
   const [cardPadding, setCardPadding] = useState(40);
   const [animationActive, setAnimationActive] = useState(true);
@@ -127,44 +127,47 @@ function App() {
     <>
       <Header>
         <button onClick={() => dialogRef.current?.showModal()}>
-          click me!
+          click me !
         </button>
       </Header>
-
-      <Scoreboard
-        score={score}
-        highScore={highScore}
-        cardsRemaining={52 - drawnCards.length}
-        animationActive={animationActive}
-      />
-
-      <div className="canvas">
-        {loading && <h1>Marvin is loading</h1>}
-        {error && <h1>Marvin has encountered an error</h1>}
-        <Canvas
-          imageSrc={imageSrc}
-          cardBackImage={cardBackImage}
-          cardWidth={cardWidth}
-          cardHeight={cardHeight}
-          cardPadding={cardPadding}
-          setAnimationActive={setAnimationActive}
-          animationSpeedData={animationSpeedData[animationSpeedIndex]}
+      <main>
+        <Scoreboard
+          score={score}
+          highScore={highScore}
+          cardsRemaining={52 - drawnCards.length}
+          animationActive={animationActive}
         />
-      </div>
-      <ButtonDisplay
-        gameInProgress={gameInProgress}
-        onStartClick={handleStartClick}
-        onHighLowClick={handleHighLowClick}
-        animationActive={animationActive}
-        cardProbability={cheatMode ? highLowProbability : null}
-      />
-      <Dialog
-        ref={dialogRef}
-        animationSpeedIndex={animationSpeedIndex}
-        setAnimationSpeedIndex={setAnimationSpeedIndex}
-        cheatMode={cheatMode}
-        setCheatMode={setCheatMode}
-      />
+
+        <div className="canvas">
+          {loading && <h1>Marvin is loading</h1>}
+          {error && <h1>Marvin has encountered an error</h1>}
+          <Canvas
+            imageSrc={imageSrc}
+            cardBackImage={cardBackImage}
+            // TODO canvas should calculate width height itself - no need for app to hold this info
+            cardWidth={cardWidth}
+            cardHeight={cardHeight}
+            cardPadding={cardPadding}
+            setAnimationActive={setAnimationActive}
+            animationSpeedData={animationSpeedData[animationSpeedIndex]}
+          />
+        </div>
+        <ButtonDisplay
+          gameInProgress={gameInProgress}
+          onStartClick={handleStartClick}
+          onHighLowClick={handleHighLowClick}
+          animationActive={animationActive}
+          cardProbability={cheatMode ? highLowProbability : null}
+        />
+        <Dialog
+          ref={dialogRef}
+          animationSpeedIndex={animationSpeedIndex}
+          setAnimationSpeedIndex={setAnimationSpeedIndex}
+          cheatMode={cheatMode}
+          setCheatMode={setCheatMode}
+        />
+      </main>
+      <footer>footer</footer>
     </>
   );
 }
