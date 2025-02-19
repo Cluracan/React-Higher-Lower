@@ -21,4 +21,14 @@ const animationSpeedData = [
 
 const cardFlipHeightFactor = 0.2;
 
-export { animationSpeedData, cardFlipHeightFactor };
+const defaultCardWidth = 180;
+const defaultCardHeight = 240;
+const cardPadding = 40;
+
+export {
+  animationSpeedData,
+  cardFlipHeightFactor,
+  cardPadding,
+  defaultCardWidth,
+  defaultCardHeight,
+};

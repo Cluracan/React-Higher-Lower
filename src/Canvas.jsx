@@ -1,28 +1,51 @@
 import { useRef, useEffect, useState, startTransition } from "react";
-import { cardFlipHeightFactor } from "./config";
+import {
+  cardFlipHeightFactor,
+  cardPadding,
+  defaultCardWidth,
+  defaultCardHeight,
+} from "./config";
+import useWindowDimensions from "../Hooks/UseWindowDimensions";
 export default function Canvas({
   imageSrc,
   cardBackImage,
-  cardWidth,
-  cardPadding,
-  cardHeight,
+  // cardWidth,
+  // cardPadding,
+  // cardHeight,
   setAnimationActive,
   animationSpeedData,
 }) {
   const canvasRef = useRef(null);
+  const { width, height } = useWindowDimensions();
   const [context, setContext] = useState(null);
   const [lastCard, setLastCard] = useState(null);
+  const [cardWidth, setCardWidth] = useState(defaultCardWidth);
+  const [cardHeight, setCardHeight] = useState(defaultCardHeight);
   const { cardTurnTime, cardPauseTime, cardMoveTime } = animationSpeedData;
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     setContext(ctx);
-  }, []);
+    if (cardBackImage) {
+      const cardAspectRatio = cardBackImage.height / cardBackImage.width;
+
+      if (width < 0.9 * defaultCardWidth * 2 + cardPadding * 3) {
+        let newCardWidth = Math.floor((0.9 * width - cardPadding * 3) / 2);
+        let newCardHeight = Math.floor(newCardWidth * cardAspectRatio);
+        setCardWidth(newCardWidth);
+        setCardHeight(newCardHeight);
+      } else {
+        setCardHeight(Math.floor(cardWidth * cardAspectRatio));
+      }
+    }
+  }, [cardBackImage, width]);
 
   useEffect(() => {
-    if (!context) return;
-    //TODO in App, start button should call draw - this is fine as app keeps check of score, so startButton just doesn't invoke high/low check
-
+    if (!context) {
+      console.log("NO CONTEXT");
+      return;
+    }
     if (cardBackImage) {
       context.drawImage(
         cardBackImage,
@@ -32,7 +55,7 @@ export default function Canvas({
         cardHeight
       );
     }
-  }, [context, cardBackImage, cardHeight, cardPadding]);
+  }, [cardWidth, cardBackImage]);
 
   useEffect(() => {
     if (imageSrc === null && context) {
@@ -184,7 +207,7 @@ export default function Canvas({
 
   return (
     <canvas
-      style={{ background: "green" }}
+      // style={{ background: "green" }}
       ref={canvasRef}
       width={2 * cardWidth + 3 * cardPadding}
       height={cardHeight + 2 * cardPadding}
