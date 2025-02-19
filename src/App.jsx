@@ -61,6 +61,7 @@ function App() {
   const [animationSpeedIndex, setAnimationSpeedIndex] = useState(1);
   const [cheatMode, setCheatMode] = useState(false);
   const [highLowProbability, setHighLowProbability] = useState(null);
+  const [marvinMessage, setMarvinMessage] = useState("Click me for options!");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -97,6 +98,7 @@ function App() {
   };
 
   const handleHighLowClick = async (prediction) => {
+    setMarvinMessage("...");
     const curCard = await drawCard();
     const lastCard = drawnCards[drawnCards.length - 1];
     if (
@@ -104,7 +106,9 @@ function App() {
       (prediction === "Lower" && curCard < lastCard)
     ) {
       setScore(score + 1);
+      setMarvinMessage("Winner!");
     } else {
+      setMarvinMessage("Ooooh! Unlucky!");
       if (score > highScore) {
         localStorage.setItem("high-score", score);
       }
@@ -116,6 +120,7 @@ function App() {
   };
 
   const handleStartClick = async () => {
+    setMarvinMessage("Good luck!");
     if (!animationActive) {
       SetImageSrc(null);
       await drawCard();
@@ -125,17 +130,16 @@ function App() {
 
   return (
     <>
-      <Header>
-        <button onClick={() => dialogRef.current?.showModal()}>
-          click me !
-        </button>
-      </Header>
+      <Header
+        animationActive={animationActive}
+        marvinMessage={marvinMessage}
+        onClick={() => dialogRef.current?.showModal()}
+      ></Header>
       <main>
         <Scoreboard
           score={score}
           highScore={highScore}
           cardsRemaining={52 - drawnCards.length}
-          animationActive={animationActive}
         />
 
         <div className="canvas">
