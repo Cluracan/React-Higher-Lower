@@ -36,7 +36,7 @@ width: 100%;
   flex-direction: row;
   justify-content: center;
 align-items: center;
- 
+ overflow: auto;
 }
 
 
@@ -133,7 +133,7 @@ input:checked + .slider:before {
 
 /* Media quetries*/
 
-@media (max-width: 1250px) {
+@media (max-width: 1250px) and (orientation:portrait) {
 
   main{
   flex-direction: column;
@@ -156,11 +156,58 @@ margin:auto
 
 }
 
+@media (max-width: 1250px) and (orientation:landscape) {
+
+  main{
+  flex-wrap: wrap;
+overflow: none;  
+}
+.button-holder{
+  justify-content: center;
+  min-width: fit-content;
+margin:0
+}
+
+.scoreboard{
+  margin:0;
+  min-width:fit-content
+}
+
+.header img{
+  height:80px
+}
+
+}
+
+
+
+
+@media (max-height:750px) {
+  footer{
+    display: none;
+  }
+}
+
+/* @media (orientation:landscape){
+  footer{
+    display: none;
+  }
+ main{
+ flex-direction:row;
+flex-wrap: wrap;
+}
+.scoreboard{
+  min-width: 0;
+}
+} */
+
+
 /* only apply hover check if device has true hover potential (not mobile)*/
 @media (hover:hover){
   .header img:hover{
     cursor:pointer;
     box-shadow: inset 0px 0px 12px -6px rgb(184, 240, 180);
-  
+    
   }
 }
+
