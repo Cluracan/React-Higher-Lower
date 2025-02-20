@@ -48,15 +48,12 @@ function App() {
   const [error, setError] = useState(null);
   const [imageSrc, SetImageSrc] = useState(null);
   const [cardBackImage, setCardBackImage] = useState(null);
-  const [cardWidth, setCardWidth] = useState(200);
-  const [cardHeight, setCardHeight] = useState(166);
-  const [cardPadding, setCardPadding] = useState(40);
+
   const [animationActive, setAnimationActive] = useState(true);
   const [gameInProgress, setGameInProgress] = useState(false);
   const [drawnCards, setDrawnCards] = useState([]);
   const [score, setScore] = useState(0);
   const highScore = useExternalStorage();
-  const { height, width } = useWindowDimensions();
   const dialogRef = useRef(null);
   const [animationSpeedIndex, setAnimationSpeedIndex] = useState(1);
   const [cheatMode, setCheatMode] = useState(false);
@@ -70,9 +67,7 @@ function App() {
         const cardBackImage = await fetchCardBack();
         setCardBackImage(cardBackImage);
         setDeckId(deckId);
-        setCardHeight(
-          Math.floor((cardWidth * cardBackImage.height) / cardBackImage.width)
-        );
+
         setError(null);
       } catch (err) {
         setError(err.message);
@@ -148,10 +143,6 @@ function App() {
           <Canvas
             imageSrc={imageSrc}
             cardBackImage={cardBackImage}
-            // TODO canvas should calculate width height itself - no need for app to hold this info
-            cardWidth={cardWidth}
-            cardHeight={cardHeight}
-            cardPadding={cardPadding}
             setAnimationActive={setAnimationActive}
             animationSpeedData={animationSpeedData[animationSpeedIndex]}
           />
@@ -186,40 +177,3 @@ export default App;
 .
 
 */
-{
-  /* Display Options
-  <form>
-    <label>
-      Card Size
-      <input
-        type="range"
-        min="10"
-        max={0.9 * 0.5 * (width - 3 * cardPadding)}
-        value={cardWidth || "100"}
-        onChange={(e) => {
-          if (Math.abs(e.target.value - cardWidth) > 1) {
-            setCardWidth(Math.floor(parseInt(e.target.value)));
-            setCardHeight(
-              Math.floor(
-                (cardWidth * cardBackImage.height) / cardBackImage.width
-              )
-            );
-          }
-        }}
-      />
-    </label>
-    <label>
-      Padding Size
-      <input
-        type="range"
-        min="5"
-        max={0.9 * (1 / 3) * (width - 2 * cardWidth)}
-        value={cardPadding || "20"}
-        onChange={(e) => {
-          console.log(height);
-          setCardPadding(Math.floor(parseInt(e.target.value)));
-        }}
-      />
-    </label>
-  </form> */
-}
