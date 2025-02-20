@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, startTransition } from "react";
+import { useRef, useEffect, useState } from "react";
 import {
   cardFlipHeightFactor,
   cardPadding,
@@ -6,12 +6,10 @@ import {
   defaultCardHeight,
 } from "./config";
 import useWindowDimensions from "../Hooks/UseWindowDimensions";
+
 export default function Canvas({
   imageSrc,
   cardBackImage,
-  // cardWidth,
-  // cardPadding,
-  // cardHeight,
   setAnimationActive,
   animationSpeedData,
 }) {
@@ -27,9 +25,9 @@ export default function Canvas({
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     setContext(ctx);
+
     if (cardBackImage) {
       const cardAspectRatio = cardBackImage.height / cardBackImage.width;
-
       if (width < 0.9 * defaultCardWidth * 2 + cardPadding * 3) {
         let newCardWidth = Math.floor((0.9 * width - cardPadding * 3) / 2);
         let newCardHeight = Math.floor(newCardWidth * cardAspectRatio);
@@ -203,11 +201,12 @@ export default function Canvas({
     return () => {
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, [imageSrc, cardHeight, cardPadding]);
+  }, [imageSrc, cardWidth]);
 
   return (
     <canvas
       // style={{ background: "green" }}
+
       ref={canvasRef}
       width={2 * cardWidth + 3 * cardPadding}
       height={cardHeight + 2 * cardPadding}
