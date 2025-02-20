@@ -44,7 +44,6 @@ const calculateHighLowProbabilities = (usedCards) => {
 
 function App() {
   const [deckId, setDeckId] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [imageSrc, SetImageSrc] = useState(null);
   const [cardBackImage, setCardBackImage] = useState(null);
@@ -58,7 +57,7 @@ function App() {
   const [animationSpeedIndex, setAnimationSpeedIndex] = useState(1);
   const [cheatMode, setCheatMode] = useState(false);
   const [highLowProbability, setHighLowProbability] = useState(null);
-  const [marvinMessage, setMarvinMessage] = useState("Click me for options!");
+  const [marvinMessage, setMarvinMessage] = useState({ type: "loading" });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,7 +72,7 @@ function App() {
         setError(err.message);
         setDeckId(null);
       } finally {
-        setLoading(false);
+        setMarvinMessage({ type: "start" });
         setAnimationActive(false);
       }
     };
@@ -93,17 +92,15 @@ function App() {
   };
 
   const handleHighLowClick = async (prediction) => {
-    setMarvinMessage("...");
     const curCard = await drawCard();
     const lastCard = drawnCards[drawnCards.length - 1];
+    setMarvinMessage({ type: "prediction", prediction, lastCard });
     if (
       (prediction === "Higher" && curCard > lastCard) ||
       (prediction === "Lower" && curCard < lastCard)
     ) {
       setScore(score + 1);
-      setMarvinMessage("Winner!");
     } else {
-      setMarvinMessage("Ooooh! Unlucky!");
       if (score > highScore) {
         localStorage.setItem("high-score", score);
       }
@@ -115,7 +112,7 @@ function App() {
   };
 
   const handleStartClick = async () => {
-    setMarvinMessage("Good luck!");
+    setMarvinMessage({ type: "reset" });
     if (!animationActive) {
       SetImageSrc(null);
       await drawCard();
@@ -128,6 +125,7 @@ function App() {
       <Header
         animationActive={animationActive}
         marvinMessage={marvinMessage}
+        gameInProgress={gameInProgress}
         onClick={() => dialogRef.current?.showModal()}
       ></Header>
       <main>
@@ -138,7 +136,6 @@ function App() {
         />
 
         <div className="canvas">
-          {loading && <h1>Marvin is loading</h1>}
           {error && <h1>Marvin has encountered an error</h1>}
           <Canvas
             imageSrc={imageSrc}
@@ -162,7 +159,7 @@ function App() {
           setCheatMode={setCheatMode}
         />
       </main>
-      <footer>footer</footer>
+      <footer>2025</footer>
     </>
   );
 }
