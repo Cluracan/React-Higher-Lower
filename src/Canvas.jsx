@@ -49,6 +49,11 @@ export default function Canvas({
 
       setCardBackImage(cardBackImg);
     };
+    ctx.fillStyle = "green";
+    ctx.fillRect(0, 0, 50, 50);
+    let pixelRatio = window.devicePixelRatio;
+
+    console.log(pixelRatio);
   }, [width]);
 
   useEffect(() => {
