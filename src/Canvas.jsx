@@ -50,7 +50,7 @@ export default function Canvas({
       setCardBackImage(cardBackImg);
     };
     ctx.fillStyle = "green";
-    ctx.fillRect(0, 0, 50, 50);
+    ctx.fillRect(50, 50, 200, 200);
     let pixelRatio = window.devicePixelRatio;
 
     console.log(pixelRatio);
@@ -69,6 +69,8 @@ export default function Canvas({
         cardHeight
       );
     }
+    context.fillStyle = "green";
+    context.fillRect(50, 50, 200, 200);
   }, [cardWidth, cardBackImage]);
 
   useEffect(() => {
