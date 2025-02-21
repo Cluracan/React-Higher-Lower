@@ -52,8 +52,6 @@ export default function Canvas({
 
       setCardBackImage(cardBackImg);
     };
-    ctx.fillStyle = "green";
-    ctx.fillRect(50, 50, 200, 200);
 
     setPixel(window.devicePixelRatio);
   }, [width]);
@@ -68,10 +66,10 @@ export default function Canvas({
         2 * cardPadding + cardWidth,
         cardPadding,
         cardWidth,
-        cardHeight
+        cardWidth * cardAspect
       );
     }
-    context.fillStyle = "pink";
+    context.fillStyle = "orange";
     context.fillRect(50, 50, 200, 200);
   }, [cardWidth, cardBackImage]);
 
