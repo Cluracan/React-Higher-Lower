@@ -31,12 +31,12 @@ export default function Canvas({
       let newCardWidth;
       const cardAspectRatio = cardBackImg.height / cardBackImg.width;
       if (width < 0.9 * defaultCardWidth * 2 + cardPadding * 3) {
-        newCardWidth = Math.floor((0.9 * width - cardPadding * 3) / 2);
+        newCardWidth = Math.round((0.9 * width - cardPadding * 3) / 2);
       } else {
         newCardWidth = defaultCardWidth;
       }
       setCardWidth(newCardWidth);
-      const newCardHeight = Math.floor(cardWidth * cardAspectRatio);
+      const newCardHeight = Math.round(cardWidth * cardAspectRatio);
       setCardHeight(newCardHeight);
 
       ctx.drawImage(
@@ -96,6 +96,8 @@ export default function Canvas({
         cardWidth,
         cardHeight
       );
+      context.fillStyle = "pink";
+      context.fillRect(50, 50, 200, 200);
       return;
     }
 
