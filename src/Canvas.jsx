@@ -17,10 +17,9 @@ export default function Canvas({
   const [context, setContext] = useState(null);
   const [lastCard, setLastCard] = useState(null);
   const [cardWidth, setCardWidth] = useState(defaultCardWidth);
-  const [cardHeight, setCardHeight] = useState(defaultCardHeight);
   const { cardTurnTime, cardPauseTime, cardMoveTime } = animationSpeedData;
   const [cardBackImage, setCardBackImage] = useState(null);
-  const [cardAspect, setCardAspect] = useState(null);
+  const [cardAspectRatio, setCardAspectRatio] = useState(null);
   const [pixel, setPixel] = useState(null);
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -30,28 +29,28 @@ export default function Canvas({
     cardBackImg.src = "./cardBack.png";
     cardBackImg.onload = () => {
       let newCardWidth;
-      const cardAspectRatio = cardBackImg.height / cardBackImg.width;
-      console.log(cardAspectRatio);
-      setCardAspect(cardAspectRatio);
+      let newCardAspectRatio = cardBackImg.height / cardBackImg.width;
+      setCardAspectRatio(newCardAspectRatio);
+
       if (width < 0.9 * defaultCardWidth * 2 + cardPadding * 3) {
         newCardWidth = Math.round((0.9 * width - cardPadding * 3) / 2);
       } else {
         newCardWidth = defaultCardWidth;
       }
       setCardWidth(newCardWidth);
-      const newCardHeight = Math.round(cardWidth * cardAspectRatio);
-      setCardHeight(newCardHeight);
 
       ctx.drawImage(
         cardBackImg,
         2 * cardPadding + newCardWidth,
         cardPadding,
         newCardWidth,
-        newCardHeight
+        newCardWidth * newCardAspectRatio
       );
 
       setCardBackImage(cardBackImg);
     };
+    ctx.fillStyle = "green";
+    ctx.fillRect(50, 50, 200, 200);
 
     setPixel(window.devicePixelRatio);
   }, [width]);
@@ -66,10 +65,10 @@ export default function Canvas({
         2 * cardPadding + cardWidth,
         cardPadding,
         cardWidth,
-        cardWidth * cardAspect
+        cardWidth * cardAspectRatio
       );
     }
-    context.fillStyle = "orange";
+    context.fillStyle = "pink";
     context.fillRect(50, 50, 200, 200);
   }, [cardWidth, cardBackImage]);
 
@@ -86,7 +85,7 @@ export default function Canvas({
         2 * cardPadding + cardWidth,
         cardPadding,
         cardWidth,
-        cardHeight
+        cardWidth * cardAspectRatio
       );
 
       context.drawImage(
@@ -94,7 +93,7 @@ export default function Canvas({
         cardPadding,
         cardPadding,
         cardWidth,
-        cardHeight
+        cardWidth * cardAspectRatio
       );
       context.fillStyle = "pink";
       context.fillRect(50, 50, 200, 200);
@@ -120,7 +119,7 @@ export default function Canvas({
             2 * cardPadding + cardWidth,
             cardPadding,
             cardWidth,
-            cardHeight
+            cardWidth * cardAspectRatio
           );
           if (lastCard) {
             context.drawImage(
@@ -128,7 +127,7 @@ export default function Canvas({
               cardPadding,
               cardPadding,
               cardWidth,
-              cardHeight
+              cardWidth * cardAspectRatio
             );
           }
           if (elapsed < cardTurnTime) {
@@ -153,7 +152,7 @@ export default function Canvas({
                     stepDistance,
                   cardPadding - 1 * heightMultiplier * i,
                   1,
-                  cardHeight + 2 * heightMultiplier * i
+                  cardWidth * cardAspectRatio + 2 * heightMultiplier * i
                 );
               }
             } else {
@@ -174,7 +173,8 @@ export default function Canvas({
                       stepDistance),
                   cardPadding - 1 * heightMultiplier * (image.width - i),
                   1,
-                  cardHeight + 2 * heightMultiplier * (image.width - i)
+                  cardWidth * cardAspectRatio +
+                    2 * heightMultiplier * (image.width - i)
                 );
               }
             }
@@ -184,7 +184,7 @@ export default function Canvas({
               2 * cardPadding + cardWidth,
               cardPadding,
               cardWidth,
-              cardHeight
+              cardWidth * cardAspectRatio
             );
           } else if (elapsed < cardTurnTime + cardPauseTime + cardMoveTime) {
             const stepDistance = Math.floor(
@@ -196,7 +196,7 @@ export default function Canvas({
               2 * cardPadding + cardWidth - stepDistance,
               cardPadding,
               cardWidth,
-              cardHeight
+              cardWidth * cardAspectRatio
             );
           } else {
             context.drawImage(
@@ -204,7 +204,7 @@ export default function Canvas({
               cardPadding,
               cardPadding,
               cardWidth,
-              cardHeight
+              cardWidth * cardAspectRatio
             );
 
             setLastCard(image);
