@@ -154,7 +154,7 @@ input:checked + .slider:before {
 @media (max-width: 1250px) and (orientation: landscape) {
   /*This is one fix - better to dnamically reduce cardwidth on low height (in which case remove this)?*/
   #root {
-    flex-direction: column-reverse;
+    flex-direction: column;
     overflow: auto;
   }
 
