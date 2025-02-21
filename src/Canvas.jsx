@@ -20,7 +20,7 @@ export default function Canvas({
   const [cardHeight, setCardHeight] = useState(defaultCardHeight);
   const { cardTurnTime, cardPauseTime, cardMoveTime } = animationSpeedData;
   const [cardBackImage, setCardBackImage] = useState(null);
-
+  const [cardAspect, setCardAspect] = useState(null);
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -30,6 +30,8 @@ export default function Canvas({
     cardBackImg.onload = () => {
       let newCardWidth;
       const cardAspectRatio = cardBackImg.height / cardBackImg.width;
+      console.log(cardAspectRatio);
+      setCardAspect(cardAspectRatio);
       if (width < 0.9 * defaultCardWidth * 2 + cardPadding * 3) {
         newCardWidth = Math.round((0.9 * width - cardPadding * 3) / 2);
       } else {
@@ -51,9 +53,6 @@ export default function Canvas({
     };
     ctx.fillStyle = "green";
     ctx.fillRect(50, 50, 200, 200);
-    let pixelRatio = window.devicePixelRatio;
-
-    console.log(pixelRatio);
   }, [width]);
 
   useEffect(() => {
@@ -225,6 +224,7 @@ export default function Canvas({
 
   return (
     <>
+      <p>{cardAspect}</p>
       <canvas
         // style={{ background: "green" }}
 
