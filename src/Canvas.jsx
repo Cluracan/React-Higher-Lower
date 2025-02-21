@@ -69,7 +69,7 @@ export default function Canvas({
         cardHeight
       );
     }
-    context.fillStyle = "green";
+    context.fillStyle = "pink";
     context.fillRect(50, 50, 200, 200);
   }, [cardWidth, cardBackImage]);
 
