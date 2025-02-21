@@ -46,7 +46,6 @@ function App() {
   const [deckId, setDeckId] = useState(null);
   const [error, setError] = useState(null);
   const [imageSrc, SetImageSrc] = useState(null);
-  const [cardBackImage, setCardBackImage] = useState(null);
 
   const [animationActive, setAnimationActive] = useState(true);
   const [gameInProgress, setGameInProgress] = useState(false);
@@ -63,8 +62,7 @@ function App() {
     const fetchData = async () => {
       try {
         const deckId = await fetchDeckId();
-        const cardBackImage = await fetchCardBack();
-        setCardBackImage(cardBackImage);
+
         setDeckId(deckId);
 
         setError(null);
@@ -139,7 +137,6 @@ function App() {
           {error && <h1>Marvin has encountered an error</h1>}
           <Canvas
             imageSrc={imageSrc}
-            cardBackImage={cardBackImage}
             setAnimationActive={setAnimationActive}
             animationSpeedData={animationSpeedData[animationSpeedIndex]}
           />

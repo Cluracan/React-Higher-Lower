@@ -9,7 +9,6 @@ import useWindowDimensions from "../Hooks/UseWindowDimensions";
 
 export default function Canvas({
   imageSrc,
-  cardBackImage,
   setAnimationActive,
   animationSpeedData,
 }) {
@@ -20,28 +19,40 @@ export default function Canvas({
   const [cardWidth, setCardWidth] = useState(defaultCardWidth);
   const [cardHeight, setCardHeight] = useState(defaultCardHeight);
   const { cardTurnTime, cardPauseTime, cardMoveTime } = animationSpeedData;
+  const [cardBackImage, setCardBackImage] = useState(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     setContext(ctx);
-
-    if (cardBackImage) {
-      const cardAspectRatio = cardBackImage.height / cardBackImage.width;
+    const cardBackImg = new Image();
+    cardBackImg.src = "./cardBack.png";
+    cardBackImg.onload = () => {
+      let newCardWidth;
+      const cardAspectRatio = cardBackImg.height / cardBackImg.width;
       if (width < 0.9 * defaultCardWidth * 2 + cardPadding * 3) {
-        let newCardWidth = Math.floor((0.9 * width - cardPadding * 3) / 2);
-        let newCardHeight = Math.floor(newCardWidth * cardAspectRatio);
-        setCardWidth(newCardWidth);
-        setCardHeight(newCardHeight);
+        newCardWidth = Math.floor((0.9 * width - cardPadding * 3) / 2);
       } else {
-        setCardHeight(Math.floor(cardWidth * cardAspectRatio));
+        newCardWidth = defaultCardWidth;
       }
-    }
-  }, [cardBackImage, width]);
+      setCardWidth(newCardWidth);
+      const newCardHeight = Math.floor(cardWidth * cardAspectRatio);
+      setCardHeight(newCardHeight);
+
+      ctx.drawImage(
+        cardBackImg,
+        2 * cardPadding + newCardWidth,
+        cardPadding,
+        newCardWidth,
+        newCardHeight
+      );
+
+      setCardBackImage(cardBackImg);
+    };
+  }, [width]);
 
   useEffect(() => {
     if (!context) {
-      console.log("NO CONTEXT");
       return;
     }
     if (cardBackImage) {
@@ -204,12 +215,14 @@ export default function Canvas({
   }, [imageSrc, cardWidth]);
 
   return (
-    <canvas
-      // style={{ background: "green" }}
+    <>
+      <canvas
+        // style={{ background: "green" }}
 
-      ref={canvasRef}
-      width={2 * cardWidth + 3 * cardPadding}
-      height={cardHeight + 2 * cardPadding}
-    />
+        ref={canvasRef}
+        width={2 * cardWidth + 3 * cardPadding}
+        height={cardHeight + 2 * cardPadding}
+      />
+    </>
   );
 }
