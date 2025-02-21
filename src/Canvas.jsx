@@ -1,10 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import {
-  cardFlipHeightFactor,
-  cardPadding,
-  defaultCardWidth,
-  defaultCardHeight,
-} from "./config";
+import { cardFlipHeightFactor, cardPadding, defaultCardWidth } from "./config";
 import useWindowDimensions from "../Hooks/UseWindowDimensions";
 
 export default function Canvas({
@@ -20,7 +15,7 @@ export default function Canvas({
   const { cardTurnTime, cardPauseTime, cardMoveTime } = animationSpeedData;
   const [cardBackImage, setCardBackImage] = useState(null);
   const [cardAspectRatio, setCardAspectRatio] = useState(null);
-  const [pixel, setPixel] = useState(null);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -39,6 +34,8 @@ export default function Canvas({
       }
       setCardWidth(newCardWidth);
 
+      ctx.clearRect(0, 0, ctx.width, ctx.height);
+
       ctx.drawImage(
         cardBackImg,
         2 * cardPadding + newCardWidth,
@@ -49,10 +46,6 @@ export default function Canvas({
 
       setCardBackImage(cardBackImg);
     };
-    ctx.fillStyle = "green";
-    ctx.fillRect(50, 50, 200, 200);
-
-    setPixel(window.devicePixelRatio);
   }, [width]);
 
   useEffect(() => {
@@ -68,8 +61,6 @@ export default function Canvas({
         cardWidth * cardAspectRatio
       );
     }
-    context.fillStyle = "pink";
-    context.fillRect(50, 50, 200, 200);
   }, [cardWidth, cardBackImage]);
 
   useEffect(() => {
@@ -95,8 +86,7 @@ export default function Canvas({
         cardWidth,
         cardWidth * cardAspectRatio
       );
-      context.fillStyle = "pink";
-      context.fillRect(50, 50, 200, 200);
+
       return;
     }
 
@@ -224,15 +214,11 @@ export default function Canvas({
   }, [imageSrc, cardWidth]);
 
   return (
-    <>
-      <p>{pixel}</p>
-      <canvas
-        // style={{ background: "green" }}
-
-        ref={canvasRef}
-        width={600}
-        height={400}
-      />
-    </>
+    <canvas
+      // style={{ background: "green" }}
+      ref={canvasRef}
+      width={2 * cardWidth + 3 * cardPadding}
+      height={cardWidth * cardAspectRatio + 2 * cardPadding}
+    />
   );
 }
