@@ -21,6 +21,7 @@ export default function Canvas({
   const { cardTurnTime, cardPauseTime, cardMoveTime } = animationSpeedData;
   const [cardBackImage, setCardBackImage] = useState(null);
   const [cardAspect, setCardAspect] = useState(null);
+  const [pixel, setPixel] = useState(null);
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -53,6 +54,8 @@ export default function Canvas({
     };
     ctx.fillStyle = "green";
     ctx.fillRect(50, 50, 200, 200);
+
+    setPixel(window.devicePixelRatio);
   }, [width]);
 
   useEffect(() => {
@@ -225,6 +228,7 @@ export default function Canvas({
   return (
     <>
       <p>{cardAspect}</p>
+      <p>{pixel}</p>
       <canvas
         // style={{ background: "green" }}
 
