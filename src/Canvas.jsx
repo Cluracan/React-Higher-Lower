@@ -225,7 +225,6 @@ export default function Canvas({
 
   return (
     <>
-      <p>{cardAspect}</p>
       <p>{pixel}</p>
       <canvas
         // style={{ background: "green" }}
