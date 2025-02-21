@@ -229,8 +229,8 @@ export default function Canvas({
         // style={{ background: "green" }}
 
         ref={canvasRef}
-        width={2 * cardWidth + 3 * cardPadding}
-        height={cardHeight + 2 * cardPadding}
+        width={600}
+        height={400}
       />
     </>
   );
