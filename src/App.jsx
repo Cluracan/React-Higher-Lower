@@ -154,6 +154,7 @@ function App() {
           setAnimationSpeedIndex={setAnimationSpeedIndex}
           cheatMode={cheatMode}
           setCheatMode={setCheatMode}
+          closeModal={() => dialogRef.current?.close()}
         />
       </main>
       <footer>2025</footer>

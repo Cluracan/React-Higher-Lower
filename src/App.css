@@ -68,6 +68,10 @@ dialog {
   margin-bottom: 50px;
 }
 
+dialog h4 {
+  margin: 5px 0;
+}
+
 form {
   display: flex;
   flex-direction: column;

@@ -3,12 +3,25 @@ import { animationSpeedData } from "./config";
 
 const Dialog = forwardRef(
   (
-    { animationSpeedIndex, setAnimationSpeedIndex, cheatMode, setCheatMode },
+    {
+      animationSpeedIndex,
+      setAnimationSpeedIndex,
+      cheatMode,
+      setCheatMode,
+      closeModal,
+    },
     ref
   ) => {
     return (
-      <dialog ref={ref}>
-        Options
+      <dialog
+        ref={ref}
+        onClick={(e) => {
+          if (e.currentTarget === e.target) {
+            closeModal();
+          }
+        }}
+      >
+        <h4>Options</h4>
         <form>
           <label>
             Animation Speed: {animationSpeedData[animationSpeedIndex].desc}
